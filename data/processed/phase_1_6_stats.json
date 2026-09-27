@@ -1,0 +1,205 @@
+{
+  "total_rows": 1457175,
+  "total_columns": 37,
+  "success_count": 1323927,
+  "fail_count": 133248,
+  "failure_percentage": 9.144,
+  "consistency_fail_le_attempts_violations": 0,
+  "max_success_rate_discrepancy": 4.999999999999449e-05,
+  "numeric_ranges": {
+    "customer_availability_rate": {
+      "min": 0.1,
+      "max": 0.9999,
+      "mean": 0.7854,
+      "median": 0.808,
+      "std": 0.1313
+    },
+    "customer_previous_delivery_attempts": {
+      "min": 0.0,
+      "max": 50.0,
+      "mean": 7.3073,
+      "median": 5.0,
+      "std": 7.728
+    },
+    "customer_previous_failed_attempts": {
+      "min": 0.0,
+      "max": 20.0,
+      "mean": 0.4139,
+      "median": 0.0,
+      "std": 0.8872
+    },
+    "customer_previous_success_rate": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.9501,
+      "median": 1.0,
+      "std": 0.1232
+    },
+    "address_access_difficulty": {
+      "min": 1.0,
+      "max": 5.0,
+      "mean": 2.325,
+      "median": 2.0,
+      "std": 1.2863
+    },
+    "signature_required": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.0703,
+      "median": 0.0,
+      "std": 0.2556
+    },
+    "historical_zone_failure_rate": {
+      "min": 0.008,
+      "max": 0.125,
+      "mean": 0.0368,
+      "median": 0.0335,
+      "std": 0.0168
+    },
+    "historical_station_failure_rate": {
+      "min": 0.019,
+      "max": 0.0396,
+      "mean": 0.0287,
+      "median": 0.0252,
+      "std": 0.0069
+    },
+    "seasonal_failure_rate": {
+      "min": 0.0153,
+      "max": 0.0471,
+      "mean": 0.0314,
+      "median": 0.0321,
+      "std": 0.0047
+    },
+    "traffic_risk_score": {
+      "min": 0.2301,
+      "max": 0.98,
+      "mean": 0.4731,
+      "median": 0.4588,
+      "std": 0.1359
+    },
+    "weather_risk_score": {
+      "min": 0.0505,
+      "max": 0.8827,
+      "mean": 0.2948,
+      "median": 0.2768,
+      "std": 0.1242
+    }
+  },
+  "cat_distributions": {
+    "preferred_delivery_method": {
+      "Front Door": 611177,
+      "Porch": 291725,
+      "Locker": 145547,
+      "Garage": 117089,
+      "Mailroom": 116643,
+      "Hand to Customer": 116565,
+      "Neighbor": 58429
+    },
+    "customer_delivery_preference": {
+      "Anytime": 873253,
+      "Evening Only": 175495,
+      "Morning Only": 174954,
+      "Weekday Only": 145915,
+      "Leave with Guard": 87558
+    },
+    "address_access_difficulty": {
+      "1": 508985,
+      "2": 381171,
+      "3": 272752,
+      "4": 173040,
+      "5": 121227
+    },
+    "signature_required": {
+      "0": 1354778,
+      "1": 102397
+    }
+  },
+  "corr_with_target": {
+    "customer_availability_rate": -0.0402,
+    "customer_previous_delivery_attempts": -0.0009,
+    "customer_previous_failed_attempts": 0.0168,
+    "customer_previous_success_rate": -0.0335,
+    "address_access_difficulty": 0.0334,
+    "signature_required": 0.0143,
+    "historical_zone_failure_rate": 0.0115,
+    "historical_station_failure_rate": 0.0039,
+    "seasonal_failure_rate": 0.0011,
+    "traffic_risk_score": 0.0057,
+    "weather_risk_score": 0.0044,
+    "planned_service_time_seconds": 0.0034,
+    "package_volume_cm3": 0.0047,
+    "departure_hour": 0.0057,
+    "is_weekend": 0.006
+  },
+  "method_failure_rates": {
+    "Front Door": 0.0896,
+    "Garage": 0.0928,
+    "Hand to Customer": 0.1032,
+    "Locker": 0.0809,
+    "Mailroom": 0.0936,
+    "Neighbor": 0.094,
+    "Porch": 0.094
+  },
+  "pref_failure_rates": {
+    "Anytime": 0.0866,
+    "Evening Only": 0.0849,
+    "Leave with Guard": 0.0853,
+    "Morning Only": 0.1201,
+    "Weekday Only": 0.0979
+  },
+  "sig_failure_rates": {
+    "0": 0.0903,
+    "1": 0.1064
+  },
+  "access_failure_rates": {
+    "1": 0.0818,
+    "2": 0.0886,
+    "3": 0.0964,
+    "4": 0.1036,
+    "5": 0.1122
+  },
+  "inter_synth_corrs": {
+    "avail_vs_success_rate": 0.1882,
+    "traffic_vs_departure_hour": 0.339,
+    "access_vs_planned_service_time": 0.0511
+  },
+  "columns_list": [
+    "route_id",
+    "stop_id",
+    "package_id",
+    "first_attempt_failed",
+    "station_code",
+    "delivery_date",
+    "departure_time",
+    "latitude",
+    "longitude",
+    "zone_id",
+    "stop_type",
+    "time_window_start",
+    "time_window_end",
+    "planned_service_time_seconds",
+    "depth_cm",
+    "height_cm",
+    "width_cm",
+    "package_volume_cm3",
+    "departure_hour",
+    "day_of_week",
+    "is_weekend",
+    "month",
+    "time_window_duration_hours",
+    "customer_availability_rate",
+    "customer_previous_delivery_attempts",
+    "customer_previous_failed_attempts",
+    "customer_previous_success_rate",
+    "address_access_difficulty",
+    "preferred_delivery_method",
+    "signature_required",
+    "customer_delivery_preference",
+    "historical_zone_failure_rate",
+    "historical_station_failure_rate",
+    "seasonal_failure_rate",
+    "traffic_risk_score",
+    "weather_risk_score",
+    "scan_status"
+  ]
+}

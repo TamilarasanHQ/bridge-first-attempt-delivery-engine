@@ -1,0 +1,289 @@
+{
+  "input_rows": 1457175,
+  "output_rows": 1457175,
+  "input_cols": 37,
+  "output_cols": 49,
+  "identifiers": [
+    "route_id",
+    "stop_id",
+    "package_id"
+  ],
+  "target": "first_attempt_failed",
+  "categorical_features": [
+    "station_code",
+    "preferred_delivery_method",
+    "customer_delivery_preference"
+  ],
+  "numeric_features": [
+    "latitude",
+    "longitude",
+    "planned_service_time_seconds",
+    "depth_cm",
+    "height_cm",
+    "width_cm",
+    "package_volume_cm3",
+    "departure_hour",
+    "is_weekend",
+    "month",
+    "time_window_duration_hours",
+    "customer_availability_rate",
+    "customer_previous_delivery_attempts",
+    "customer_previous_failed_attempts",
+    "customer_previous_success_rate",
+    "address_access_difficulty",
+    "signature_required",
+    "historical_zone_failure_rate",
+    "historical_station_failure_rate",
+    "seasonal_failure_rate",
+    "traffic_risk_score",
+    "weather_risk_score",
+    "has_time_window",
+    "window_start_minutes",
+    "window_end_minutes",
+    "departure_to_window_start_minutes",
+    "departure_to_window_end_minutes",
+    "departure_hour_sin",
+    "departure_hour_cos",
+    "day_of_week_sin",
+    "day_of_week_cos",
+    "log_package_volume",
+    "log_planned_service_time",
+    "preference_departure_mismatch"
+  ],
+  "engineered_features": [
+    "has_time_window",
+    "window_start_minutes",
+    "window_end_minutes",
+    "departure_to_window_start_minutes",
+    "departure_to_window_end_minutes",
+    "departure_hour_sin",
+    "departure_hour_cos",
+    "day_of_week_sin",
+    "day_of_week_cos",
+    "log_package_volume",
+    "log_planned_service_time",
+    "preference_departure_mismatch"
+  ],
+  "excluded_from_model": [
+    "route_id",
+    "stop_id",
+    "package_id",
+    "first_attempt_failed",
+    "scan_status",
+    "delivery_date",
+    "departure_time",
+    "stop_type",
+    "time_window_start",
+    "time_window_end",
+    "zone_id"
+  ],
+  "audit_violations": [],
+  "pair_correlations": {
+    "package_volume_cm3 vs log_package_volume": 0.7802,
+    "planned_service_time_seconds vs log_planned_service_time": 0.7837,
+    "departure_hour vs departure_hour_cos": 0.929,
+    "departure_hour vs departure_hour_sin": -0.9912,
+    "customer_previous_failed_attempts vs customer_previous_success_rate": -0.5699,
+    "customer_previous_delivery_attempts vs customer_previous_failed_attempts": 0.4933,
+    "departure_to_window_start_minutes vs departure_to_window_end_minutes": -0.5533,
+    "window_start_minutes vs window_end_minutes": -0.0338
+  },
+  "missing_report": {
+    "route_id": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "stop_id": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "package_id": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "first_attempt_failed": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "station_code": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "preferred_delivery_method": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "customer_delivery_preference": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "latitude": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "longitude": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "planned_service_time_seconds": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "depth_cm": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "height_cm": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "width_cm": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "package_volume_cm3": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "departure_hour": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "is_weekend": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "month": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "time_window_duration_hours": {
+      "missing_count": 1343182,
+      "missing_percent": 92.1771
+    },
+    "customer_availability_rate": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "customer_previous_delivery_attempts": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "customer_previous_failed_attempts": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "customer_previous_success_rate": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "address_access_difficulty": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "signature_required": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "historical_zone_failure_rate": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "historical_station_failure_rate": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "seasonal_failure_rate": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "traffic_risk_score": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "weather_risk_score": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "has_time_window": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "window_start_minutes": {
+      "missing_count": 1343182,
+      "missing_percent": 92.1771
+    },
+    "window_end_minutes": {
+      "missing_count": 1343182,
+      "missing_percent": 92.1771
+    },
+    "departure_to_window_start_minutes": {
+      "missing_count": 1343182,
+      "missing_percent": 92.1771
+    },
+    "departure_to_window_end_minutes": {
+      "missing_count": 1343182,
+      "missing_percent": 92.1771
+    },
+    "departure_hour_sin": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "departure_hour_cos": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "day_of_week_sin": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "day_of_week_cos": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "log_package_volume": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "log_planned_service_time": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "preference_departure_mismatch": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "delivery_date": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "departure_time": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "day_of_week": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "zone_id": {
+      "missing_count": 10901,
+      "missing_percent": 0.7481
+    },
+    "stop_type": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    },
+    "time_window_start": {
+      "missing_count": 1343182,
+      "missing_percent": 92.1771
+    },
+    "time_window_end": {
+      "missing_count": 1343182,
+      "missing_percent": 92.1771
+    },
+    "scan_status": {
+      "missing_count": 0,
+      "missing_percent": 0.0
+    }
+  }
+}

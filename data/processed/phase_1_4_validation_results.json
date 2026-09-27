@@ -1,0 +1,211 @@
+{
+  "rows_before": 1457175,
+  "rows_after": 1457175,
+  "cols_before": 24,
+  "cols_after": 23,
+  "removed_columns": [
+    "time_window_duration"
+  ],
+  "cols_after_list": [
+    "route_id",
+    "stop_id",
+    "package_id",
+    "scan_status",
+    "station_code",
+    "delivery_date",
+    "departure_time",
+    "latitude",
+    "longitude",
+    "zone_id",
+    "stop_type",
+    "time_window_start",
+    "time_window_end",
+    "planned_service_time_seconds",
+    "depth_cm",
+    "height_cm",
+    "width_cm",
+    "package_volume_cm3",
+    "departure_hour",
+    "day_of_week",
+    "is_weekend",
+    "month",
+    "time_window_duration_hours"
+  ],
+  "missing_summary": {
+    "zone_id": {
+      "count": 10901,
+      "percentage": 0.7481
+    },
+    "time_window_start": {
+      "count": 1343182,
+      "percentage": 92.1771
+    },
+    "time_window_end": {
+      "count": 1343182,
+      "percentage": 92.1771
+    },
+    "time_window_duration_hours": {
+      "count": 1343182,
+      "percentage": 92.1771
+    }
+  },
+  "tw_validation": {
+    "both_present": 113993,
+    "both_missing": 1343182,
+    "only_start_present": 0,
+    "only_end_present": 0,
+    "unparseable_start": 0,
+    "unparseable_end": 0,
+    "start_greater_than_end": 0,
+    "start_equals_end": 0,
+    "duration_le_zero": 0
+  },
+  "dim_validation": {
+    "depth_le_zero": 0,
+    "height_le_zero": 24,
+    "width_le_zero": 0,
+    "volume_le_zero": 24,
+    "volume_formula_mismatches": 0,
+    "max_absolute_volume_diff": 0.0
+  },
+  "coord_validation": {
+    "latitude_invalid_count": 0,
+    "longitude_invalid_count": 0,
+    "lat_min": 30.117288,
+    "lat_max": 48.129887,
+    "lng_min": -122.574461,
+    "lng_max": -70.757655
+  },
+  "cat_summary": {
+    "scan_status": {
+      "DELIVERED": 1446129,
+      "DELIVERY_ATTEMPTED": 11014,
+      "REJECTED": 32
+    },
+    "station_code": {
+      "DLA7": 264302,
+      "DLA9": 173480,
+      "DBO3": 128017,
+      "DSE5": 115050,
+      "DLA8": 111154,
+      "DSE4": 107384,
+      "DCH4": 93511,
+      "DBO2": 70536,
+      "DCH3": 70379,
+      "DLA3": 56579,
+      "DAU1": 50918,
+      "DCH1": 47265,
+      "DLA4": 46779,
+      "DCH2": 41386,
+      "DLA5": 38078,
+      "DSE2": 27022,
+      "DBO1": 15335
+    },
+    "stop_type": {
+      "Dropoff": 1457175
+    },
+    "day_of_week": {
+      "Friday": 250298,
+      "Tuesday": 241044,
+      "Wednesday": 230144,
+      "Thursday": 215260,
+      "Saturday": 186595,
+      "Monday": 168088,
+      "Sunday": 165746
+    },
+    "zone_id": {
+      "num_unique_zones": 8962,
+      "null_count": 10901
+    }
+  },
+  "date_time_validation": {
+    "delivery_date_unparseable": 0,
+    "delivery_date_min": "2018-07-19",
+    "delivery_date_max": "2018-08-26",
+    "departure_time_unparseable": 0,
+    "tw_start_unparseable": 0,
+    "tw_end_unparseable": 0
+  },
+  "duplicate_summary": {
+    "duplicate_package_id": 1432,
+    "duplicate_route_stop_pkg": 0,
+    "duplicate_entire_row": 0
+  },
+  "outlier_summary": {
+    "planned_service_time_seconds": {
+      "min": 0.7,
+      "max": 8007.0,
+      "mean": 68.241,
+      "median": 53.0,
+      "std": 66.921,
+      "q25": 36.5,
+      "q75": 78.0,
+      "iqr": 41.5,
+      "upper_bound_1.5iqr": 140.25,
+      "outliers_above_1.5iqr": 104128,
+      "outliers_below_1.5iqr": 0,
+      "p99": 301.0,
+      "p99_9": 708.0
+    },
+    "package_volume_cm3": {
+      "min": 0.0,
+      "max": 300522.6,
+      "mean": 11078.139,
+      "median": 5741.924,
+      "std": 14921.092,
+      "q25": 2962.6319999999996,
+      "q75": 13297.312,
+      "iqr": 10334.68,
+      "upper_bound_1.5iqr": 28799.332,
+      "outliers_above_1.5iqr": 129778,
+      "outliers_below_1.5iqr": 0,
+      "p99": 77916.215,
+      "p99_9": 138957.038
+    },
+    "depth_cm": {
+      "min": 0.8,
+      "max": 132.1,
+      "mean": 34.086,
+      "median": 32.7,
+      "std": 9.216,
+      "q25": 26.2,
+      "q75": 39.4,
+      "iqr": 13.2,
+      "upper_bound_1.5iqr": 59.2,
+      "outliers_above_1.5iqr": 24675,
+      "outliers_below_1.5iqr": 299,
+      "p99": 66.0,
+      "p99_9": 74.0
+    },
+    "height_cm": {
+      "min": 0.0,
+      "max": 83.8,
+      "mean": 10.204,
+      "median": 7.6,
+      "std": 7.352,
+      "q25": 4.8,
+      "q75": 12.7,
+      "iqr": 7.9,
+      "upper_bound_1.5iqr": 24.55,
+      "outliers_above_1.5iqr": 80598,
+      "outliers_below_1.5iqr": 0,
+      "p99": 32.3,
+      "p99_9": 40.6
+    },
+    "width_cm": {
+      "min": 0.2,
+      "max": 101.6,
+      "mean": 24.794,
+      "median": 24.3,
+      "std": 7.238,
+      "q25": 17.8,
+      "q75": 29.2,
+      "iqr": 11.4,
+      "upper_bound_1.5iqr": 46.3,
+      "outliers_above_1.5iqr": 4941,
+      "outliers_below_1.5iqr": 15,
+      "p99": 45.7,
+      "p99_9": 56.5
+    }
+  }
+}
