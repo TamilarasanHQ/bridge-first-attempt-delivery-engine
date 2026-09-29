@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "timestamp": "2026-09-29T06:20:47.239161",
+    "selected_candidate_id": "CAND-03",
+    "selected_model": "HistGradientBoosting",
+    "feature_set": "Baseline + Group B (Route Ratios)",
+    "test_packages": 224689,
+    "test_failures": 1367
+  },
+  "phase3_baseline_test": {
+    "pr_auc": 0.030381,
+    "roc_auc": 0.777917,
+    "brier": 0.005998,
+    "log_loss": 0.033713,
+    "p_at_1pct": 0.056545,
+    "r_at_1pct": 0.092904,
+    "p_at_5pct": 0.035873,
+    "r_at_5pct": 0.294806,
+    "p_at_10pct": 0.026571,
+    "r_at_10pct": 0.436723,
+    "decile_monotonic": false,
+    "top_decile_lift": 4.37
+  },
+  "phase5_candidate_test": {
+    "pr_auc": 0.032237,
+    "roc_auc": 0.776502,
+    "brier": 0.005989,
+    "log_loss": 0.033644,
+    "p_at_1pct": 0.060997,
+    "r_at_1pct": 0.100219,
+    "p_at_5pct": 0.035339,
+    "r_at_5pct": 0.290417,
+    "p_at_10pct": 0.026349,
+    "r_at_10pct": 0.433065,
+    "decile_monotonic": false,
+    "top_decile_lift": 4.33
+  }
+}

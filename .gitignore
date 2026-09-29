@@ -43,26 +43,43 @@ env/
 *.sublime-project
 *.sublime-workspace
 
+# Testing & Cache
+.pytest_cache/
+.coverage
+htmlcov/
+
 # Logs and runtime traces
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Datasets (never commit full raw or processed datasets to public repo)
+# Datasets (never commit large raw or processed datasets to public repo)
 data/raw/*
-data/processed/*.csv
-data/processed/*.parquet
+data/processed/*
 !data/processed/.gitkeep
+data/v2/*.parquet
+data/v2/*.csv
+!data/v2/.gitkeep
+v1/data/*
+v2/data/*
+*_predictions.csv
 
-# Models & Weights (never commit large serialized artifacts to git)
+# Models & Serialized Weights (never commit large serialized artifacts to git)
 models/*
 !models/.gitkeep
+v1/models/*
+!v1/models/.gitkeep
+!v1/models/risk_policy_v1.json
+v2/models/*
+!v2/models/.gitkeep
 
-# Serialization binaries
+# Binary formats
 *.pkl
 *.joblib
 *.h5
+*.npy
+*.parquet
 
 # OS generated files
 .DS_Store

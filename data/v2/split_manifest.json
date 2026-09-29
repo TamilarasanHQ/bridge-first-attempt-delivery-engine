@@ -1,0 +1,36 @@
+{
+  "version": "v2",
+  "split_method": "chronological",
+  "split_key": "planned_delivery_date",
+  "train": {
+    "start_date": "2018-07-19",
+    "end_date": "2018-08-11",
+    "days": 24,
+    "rows": 1005638,
+    "failures": 7828,
+    "successes": 997810,
+    "failure_rate": 0.00778411
+  },
+  "validation": {
+    "start_date": "2018-08-12",
+    "end_date": "2018-08-15",
+    "days": 4,
+    "rows": 225416,
+    "failures": 1734,
+    "successes": 223682,
+    "failure_rate": 0.00769244
+  },
+  "test": {
+    "start_date": "2018-08-16",
+    "end_date": "2018-08-26",
+    "days": 11,
+    "rows": 224689,
+    "failures": 1367,
+    "successes": 223322,
+    "failure_rate": 0.00608396
+  },
+  "overlapping_dates": 0,
+  "overlapping_packages": 0,
+  "split_rationale": "Strictly chronological contiguous date splitting: Train (2018-07-19 to 2018-08-11, 24 days, 69.08% packages, 7,828 failures), Validation (2018-08-12 to 2018-08-15, 4 days, 15.48% packages, 1,734 failures), Test (2018-08-16 to 2018-08-26, 11 days, 15.43% packages, 1,367 failures). Guaranteed max(train_date) < min(val_date) < min(test_date). Zero date or package overlap across splits. Provides substantial positive failure representation (>1,300 failures) in both validation and test sets.",
+  "created_at": "2026-09-29T05:39:57.297050"
+}

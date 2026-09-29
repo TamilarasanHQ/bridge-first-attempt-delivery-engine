@@ -1,219 +1,171 @@
 # BRIDGE: AI-Powered First Attempt Delivery Success Engine
 
-BRIDGE is a machine learning decision-support platform designed to predict and mitigate **first-attempt last-mile delivery failure before vehicle dispatch**.
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-12%20passed-brightgreen.svg)](tests/)
+[![Architecture: Monorepo](https://img.shields.io/badge/architecture-monorepo%20(v1%20%2B%20v2)-orange.svg)](#repository-architecture)
+
+**BRIDGE** is a production-grade machine learning decision-support platform designed to predict and mitigate **first-attempt last-mile delivery failure prior to vehicle dispatch**.
 
 ---
 
-## The Problem
+## 1. The Operational Problem
 
-In urban and suburban parcel logistics, failed initial delivery attempts account for substantial operating costs, increased carbon emissions, driver overtime, and customer frustration. The majority of delivery failure causes—customer absence, security gate lockouts, signature requirements, restrictive apartment access, and schedule mismatches—are observable or predictable **prior to dispatch**, yet most logistics routing engines treat all deliveries equally until a driver fails at the doorstep.
+In parcel logistics, failed initial delivery attempts account for massive operational costs, driver overtime, vehicle emissions, and customer churn. The primary drivers of first-attempt failure—customer absence, inaccessible apartment complexes, security gates, commercial dock hours, and route saturation—are largely observable or predictable **prior to dispatch**. 
 
----
+Yet, traditional routing engines treat every package identically until a driver physically arrives at the destination and fails.
 
-## The Solution
-
-BRIDGE analyzes route, parcel, historical customer behavior, premises access, and environmental risk factors at the fulfillment center to predict failure risk before dispatch. High-risk parcels are routed through automated pre-dispatch interventions (such as customer delivery window verification, locker rerouting, or gate code requests) to ensure successful first-attempt handoff.
+BRIDGE intercepts delivery manifests at the fulfillment center, predicts failure probabilities before loading vehicles, and prescribes targeted preventative interventions (customer time window verification, access code requests, or route de-densification) to secure successful first-attempt completion.
 
 ```text
-Delivery / Customer / Context Data
-              ↓
-       Feature Preparation
-              ↓
-       ML Risk Prediction
-              ↓
- First-Attempt Failure Probability
-              ↓
-          Risk Engine
-       ┌──────┼──────┐
-       ↓      ↓      ↓
-      Low   Medium  High
-                      ↓
-             Customer Notification
-                      ↓
-            Customer Preference
-                      ↓
-          Recommended Intervention
+Delivery / Parcel / Route Manifest Data
+                   ↓
+        Pre-Dispatch Feature Prep
+                   ↓
+          ML Failure Risk Engine
+                   ↓
+    First-Attempt Failure Probability P(fail)
+                   ↓
+      Deterministic Policy Classifier
+        ┌──────────┼──────────┐
+        ↓          ↓          ↓
+     Standard    Tier 2     Tier 1
+    (Base Flow) (Top 5%)   (Top 1%)
+                   ↓          ↓
+             Route Load   Recipient SMS/Call
+             Balancing    & Early Slot
 ```
 
 ---
 
-## System Workflows
+## 2. Monorepo Architecture: v1 vs. v2 Evolution
 
-### A. Offline Development & ML Workflow
-```text
-Source Data (Amazon 2021)
-      ↓
-Phase 1.4: Cleaning & Validation
-      ↓
-Phase 1.6: Synthetic Augmentation & Calibrated Target Generation
-      ↓
-Phase 1.7: Feature Engineering & Leakage Audit (FROZEN: 37 ML Features, 49 Total Columns)
-      ↓
-Phase 2.1: Group-Aware (Route) & Temporal Splitting + Training-Only Preprocessing
-      ↓
-Phase 2.2: Model Training (Logistic Regression, Random Forest) & Evaluation (PR-AUC, Brier Score)
-      ↓
-Model & Preprocessor Artifacts (models/)
-```
+This repository is structured as a **versioned monorepo** containing both iterations of the BRIDGE engine. This design preserves the complete engineering and research narrative—from initial prototype to production rare-event modeling.
 
-### B. Online Runtime Service Workflow
-```text
-Web Client (static/)
-      ↓
-FastAPI Dispatch API (src/bridge/server.py)
-      ↓
-Pydantic Payload Validation & Feature Preparation
-      ↓
-Saved ML Model (models/) -> Failure Probability P(failure)
-      ↓
-Risk Decision Engine (src/bridge/risk_engine.py) -> Risk Tier & Interventions
-      ↓
-JSON Response -> Web Dashboard
-```
-
----
-
-## Machine Learning & Data Leakage Discipline
-
-- **Target Isolation:** The target variable `first_attempt_failed` is strictly excluded from all feature engineering, scaling, and input matrices.
-- **Terminal Status Quarantined:** Observed ground-truth scan codes (`scan_status`) are isolated to prevent 100% target leakage.
-- **Route-Group-Aware Splitting:** Deliveries on the same route share vehicle space, driver speed, and weather conditions. Future cross-validation utilizes `GroupKFold` on `route_id` and temporal holdouts on `delivery_date`.
-- **Training-Only Preprocessing:** All scalers, imputers, and future zone frequency mappings are fitted exclusively on training splits.
-
----
-
-## Project Status
-
-| Phase | Description | Status |
+| Dimension | BRIDGE v1 (Prototype) | BRIDGE v2 (Production) |
 | :--- | :--- | :--- |
-| **Phase 1.3** | Amazon Master Dataset Creation (1,457,175 rows, 23 columns) | **COMPLETE** |
-| **Phase 1.4** | Data Quality Cleaning, Geospatial & Volume Validation | **COMPLETE** |
-| **Phase 1.5** | Machine Learning Schema Taxonomy Definition | **COMPLETE** |
-| **Phase 1.6** | Synthetic Pre-Dispatch Features & Target Generation (9.14% failure rate) | **COMPLETE** |
-| **Phase 1.7** | Feature Engineering (Cyclical, Interval, Log) & Leakage Audit (49 cols, 37 features) | **COMPLETE (FROZEN)** |
-| **Phase 2.1** | Group-Aware Splitting & Training-Only Preprocessing | *PLANNED* |
-| **Phase 2.2** | Baseline Modeling (Logistic Regression, Random Forest) & Calibration | *PLANNED* |
-| **Phase 3** | FastAPI Inference Service, Risk Decision Engine & Dashboard | *PLANNED* |
+| **Directory** | [`v1/`](v1/README.md) *(Frozen)* | [`v2/`](v2/README.md) *(Active)* |
+| **Ground-Truth Source** | Synthetic calibrated generator (`generate_synthetic_data.py`) | Genuine Amazon encounter scans (`DELIVERY_ATTEMPTED` / `REJECTED`) |
+| **Failure Prevalence** | ~9.14% (Synthetic artifact) | **0.7508%** (Authentic physical encounter rate) |
+| **Evaluation Strategy** | Route-grouped cross-validation | **Strict temporal holdout splits** (Zero chronological or route leak) |
+| **Primary Metric** | ROC-AUC / F1 Score | **PR-AUC** (Precision-Recall Area Under Curve), Top-k Lift |
+| **Best Model** | Random Forest (`PR-AUC = 0.284`) | HistGradientBoosting + Route Workload Ratios (`PR-AUC = 0.0493` val, `0.0322` test) |
+| **Operational Impact** | Validated pipeline infrastructure | **50.0x risk decile separation**; +6.11% out-of-time test improvement |
+| **Current Status** | Archived reference baseline | Active candidate pipeline |
 
 ---
 
-## Synthetic Data Disclosure
-
-BRIDGE is a **hackathon research prototype**. The underlying dataset is derived from the Amazon Last-Mile Routing Research Dataset (2021), which provides parcel dimensions, station codes, coordinates, and scheduled delivery times.
-
-Because the open dataset does not include customer account CRM history, premises access ratings, or real-time traffic and weather conditions, 13 pre-dispatch risk priors were synthetically generated using domain constraints (e.g., failed attempts $\le$ lifetime attempts, signature requirements correlated with 'Hand to Customer'). The target `first_attempt_failed` was synthesized using a latent-logit probabilistic equation to create a realistic 9.144% failure rate. **Model evaluation metrics reflect performance on this synthetic benchmark and do not represent actual Amazon delivery operations.**
-
----
-
-## Technology Stack
-
-- **Data Processing:** Python 3.13, Pandas, NumPy, PyArrow
-- **Machine Learning:** Scikit-Learn (Planned: Logistic Regression, Random Forest, PR-AUC evaluation)
-- **Backend Service:** FastAPI, Uvicorn, Pydantic
-- **Packaging & Artifacts:** Joblib
-
----
-
-## Repository Structure
+## 3. Repository Structure
 
 ```text
-bridge-first-attempt-delivery-engine/
-│
-├── README.md                           <- Project overview & documentation index
-├── LICENSE                             <- MIT License
-├── SECURITY.md                         <- Security and data privacy policy
-├── requirements.txt                    <- Python dependencies
-├── .gitignore                          <- Public git ignore rules
-│
-├── docs/                               <- Comprehensive documentation suite
-│   ├── PROJECT_CONTEXT.md              <- Full technical context & engineering guidelines
-│   ├── PROJECT_HISTORY.md              <- Chronological development log across all phases
-│   ├── ARCHITECTURE.md                 <- Runtime & software architecture design
-│   ├── DATASET.md                      <- Complete 49-column dataset taxonomy & schema
-│   └── ML_PIPELINE.md                  <- End-to-end ML lifecycle & splitting strategy
-│
-├── data/                               <- Local data directory (ignored by git)
-│   ├── README.md                       <- Data layout, local paths & replication guide
-│   ├── raw/model_build_inputs/         <- Raw Amazon JSON files (local only)
-│   └── processed/                      <- Processed Parquet/CSV files (local only)
-│       └── .gitkeep
-│
-├── src/                                <- Source code directory
-│   ├── bridge/                         <- Target application package
-│   │   └── __init__.py
-│   ├── create_master_dataset.py        <- Phase 1.3 raw merge pipeline
-│   ├── clean_and_validate.py           <- Phase 1.4 validation & cleaning pipeline
-│   ├── generate_synthetic_data.py      <- Phase 1.6 synthetic priors & target generator
-│   └── feature_engineering.py          <- Phase 1.7 feature engineering & leakage audit
-│
-├── static/                             <- Web dashboard UI (presentation layer)
-├── models/                             <- Serialized ML model artifacts (git ignored)
-│   └── .gitkeep
-└── tests/                              <- Automated test suite
-    ├── __init__.py
-    └── .gitkeep
+FDSE/
+├── v1/                               # Version 1: Synthetic Ground-Truth Baseline (Frozen)
+│   ├── src/                          # v1 data cleaning, synthetic generation, training
+│   ├── models/                       # v1 serialized models, preprocessors, risk policy
+│   ├── reports/                      # v1 validation and test evaluation reports
+│   └── README.md                     # Detailed v1 architectural documentation
+├── v2/                               # Version 2: Real-World Amazon Encounter Engine (Active)
+│   ├── src/                          # v2 raw extraction, temporal splits, explainability, optimization
+│   ├── models/                       # v2 locked baselines and Phase 5 optimized models
+│   ├── reports/                      # v2 quality audits, explainability reports, metric JSONs
+│   │   ├── phase4/                   # Permutation importance and response curve plots
+│   │   └── phase5/                   # Model comparison and test calibration plots
+│   └── README.md                     # Detailed v2 methodology and milestone documentation
+├── docs/                             # System documentation and schema specifications
+│   ├── ARCHITECTURE.md               # End-to-end software architecture
+│   ├── DATASET.md                    # Data dictionary and feature taxonomy
+│   ├── ML_PIPELINE.md                # Mathematical modeling and evaluation protocols
+│   ├── PROJECT_CONTEXT.md            # Business background and logistics domain context
+│   └── PROJECT_HISTORY.md            # Detailed milestone progression log
+├── data/                             # Shared local data cache (Ignored by Git)
+│   ├── raw/                          # Amazon Last Mile Challenge raw inputs (3.7 GB)
+│   ├── processed/                    # v1 intermediate datasets
+│   └── v2/                           # v2 canonical dataset and temporal split parquets
+├── tests/                            # Unit and integration test suite
+│   ├── __init__.py
+│   └── test_risk_engine.py           # Threshold, policy, and leakage unit tests
+├── .gitignore                        # Strict exclusion of large parquets, CSVs, and model binaries
+├── LICENSE                           # MIT License for source code
+├── THIRD_PARTY_LICENSES.md           # Amazon Dataset CC BY-NC 4.0 license notice
+├── pytest.ini                        # Test configuration and pythonpath mappings
+├── requirements.txt                  # Python dependencies
+└── README.md                         # This file
 ```
 
 ---
 
-## Quickstart & Setup
+## 4. Key Results Summary (BRIDGE v2)
 
-### 1. Clone & Set Up Environment
+### Out-of-Time Generalization (Locked Test Split: November 11–24, 2020)
+Evaluated strictly once after candidate model freezing:
+
+```text
+Phase 3 Baseline Test PR-AUC : 0.030381 | ROC-AUC: 0.7779 | Brier: 0.005998
+Phase 5 Candidate Test PR-AUC: 0.032237 | ROC-AUC: 0.7765 | Brier: 0.005989
+Absolute Improvement         : +0.001856
+Relative Improvement         : +6.11%
+```
+
+### Risk Decile Monotonicity
+Across the 225,416 validation deliveries, the engine achieves **strict ordinal calibration**:
+- **Decile 0 (Lowest Risk):** $0.067\%$ observed failure rate.
+- **Decile 9 (Highest Risk):** $3.327\%$ observed failure rate (**50.0x risk spread**).
+- **Top 1% Operational Detection:** Yields **6.10% precision** ($10.0\times$ lift above base rate) and captures **10.02% of all failures** by inspecting only 1% of dispatches.
+
+---
+
+## 5. Quickstart & Installation
+
+### Environment Setup
 ```bash
+# Clone the repository
 git clone https://github.com/your-username/bridge-first-attempt-delivery-engine.git
 cd bridge-first-attempt-delivery-engine
 
-# Create virtual environment
+# Create and activate virtual environment
 python -m venv .venv
-
-# Activate environment (Windows PowerShell)
-.venv\Scripts\Activate.ps1
-# Activate environment (Linux/macOS)
-source .venv/bin/activate
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
 ```
 
-### 2. Prepare Local Data
-See [data/README.md](data/README.md) for instructions on placing raw Amazon datasets or running the reproduction pipeline:
+### Running the Test Suite
 ```bash
-python src/feature_engineering.py
+pytest
+```
+
+### Running the v2 Modeling Pipeline
+```bash
+# 1. Dataset Construction (Raw Amazon manifest extraction)
+python v2/src/build_dataset.py
+
+# 2. Chronological Splitting (October vs. Nov 1-10 vs. Nov 11-24)
+python v2/src/create_temporal_split.py
+
+# 3. Baseline Modeling (HistGradientBoosting benchmark)
+python v2/src/train_baselines.py
+
+# 4. Explainability & Decile Diagnostics
+python v2/src/explain_baseline.py
+python v2/src/risk_diagnostics.py
+
+# 5. Feature Engineering & Locked Out-of-Time Test Evaluation
+python v2/src/phase5_model_improvement.py
 ```
 
 ---
 
-## Team & Contribution Workflow
+## 6. Data Integrity & Git Discipline
 
-We recommend a branch-based development process:
-
-```text
-main
-  ↑
-Pull Request
-  ↑
-feature-branch (e.g. phase-2-ml, backend, frontend)
-```
-
-1. Create a feature branch (`git checkout -b feature/phase-2-ml`).
-2. Make focused, modular changes with accompanying tests.
-3. Run verification scripts and ensure zero leakage.
-4. Submit a Pull Request for review before merging into `main`.
+This project enforces strict data versioning hygiene:
+- **No Large Binaries in Git:** All datasets (`*.parquet`, `*.csv`) and model serialization files (`*.joblib`, `*.npy`) are excluded via `.gitignore`.
+- **Pre-Dispatch Safety:** All engineered features are strictly verified against target leakage (no post-dispatch terminal scan statuses, actual delivery sequence indices, or routing scores).
+- **Test Set Protection:** Temporal holdout test split (`data/v2/test.parquet`) is evaluated strictly once following candidate freezing.
 
 ---
 
----
+## 7. License & Attribution
 
-## Data & Licensing
-
-### Software License
-The original source code, pipelines, and documentation authored by the BRIDGE project contributors are licensed under the [MIT License](LICENSE).
-
-### Third-Party Dataset Terms
-The original source material for the Amazon Last Mile Routing Research Challenge is third-party material, is **not** owned by the BRIDGE project, and is governed by its original terms under the [Creative Commons Attribution-NonCommercial 4.0 International Public License (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/legalcode).
-- **No Redistribution:** In compliance with licensing policies, raw and processed Amazon dataset files are **not** redistributed or hosted in this public repository.
-- **Independent Synthetic Data:** All customer behavior profiles, premises access difficulty scales, environmental risk forecasts, and the `first_attempt_failed` target variable are independently generated synthetic data created by the BRIDGE project.
-- **No Endorsement:** Amazon is not represented as sponsoring, affiliated with, or endorsing the BRIDGE project.
-
-See [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for complete attribution details.
-
+- **Source Code:** Released under the [MIT License](LICENSE).
+- **Third-Party Dataset:** Ingests the **Amazon Last Mile Routing Research Challenge (2021)** dataset, which is governed by the [Creative Commons Attribution-NonCommercial 4.0 International Public License (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/). See [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for full attributions.

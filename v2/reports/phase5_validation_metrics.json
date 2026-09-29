@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "timestamp": "2026-09-29T06:20:43.884392",
+    "selected_candidate_id": "CAND-03",
+    "selected_model": "HistGradientBoosting",
+    "feature_set": "Baseline + Group B (Route Ratios)",
+    "hyperparameters": "max_iter=150, lr=0.08, depth=7, min_leaf=50",
+    "validation_packages": 225416,
+    "validation_failures": 1734
+  },
+  "phase3_baseline": {
+    "pr_auc": 0.043989,
+    "roc_auc": 0.790355,
+    "brier": 0.007513,
+    "log_loss": 0.040422,
+    "p_at_1pct": 0.07764,
+    "r_at_1pct": 0.100923,
+    "p_at_5pct": 0.042591,
+    "r_at_5pct": 0.276817,
+    "p_at_10pct": 0.033273,
+    "r_at_10pct": 0.432526,
+    "decile_monotonic": true,
+    "top_decile_lift": 4.33
+  },
+  "phase5_candidate": {
+    "candidate_id": "CAND-03",
+    "model_name": "HistGradientBoosting",
+    "feature_set": "Baseline + Group B (Route Ratios)",
+    "hyperparameters": "max_iter=150, lr=0.08, depth=7, min_leaf=50",
+    "train_time_sec": 25.95,
+    "val_pr_auc": 0.049303,
+    "val_roc_auc": 0.786763,
+    "val_brier": 0.007486,
+    "val_log_loss": 0.040575,
+    "val_p_at_1pct": 0.068767,
+    "val_r_at_1pct": 0.089389,
+    "val_p_at_5pct": 0.041615,
+    "val_r_at_5pct": 0.270473,
+    "val_p_at_10pct": 0.031676,
+    "val_r_at_10pct": 0.411765,
+    "decile_monotonic": true,
+    "top_decile_lift": 4.12,
+    "notes": "Evaluates packages/stop, volume/package, volume/stop, pkg_vol/route_vol"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "policy_name": "bridge_operational_risk_policy",
+  "policy_version": "v1.0.0",
+  "creation_date": "2026-09-28",
+  "model": {
+    "name": "logistic_regression_unweighted",
+    "artifact_path": "models/model_logistic_regression.joblib",
+    "preprocessor_path": "models/preprocessor_lr.joblib",
+    "validation_metrics": {
+      "roc_auc": 0.5692,
+      "pr_auc": 0.1187,
+      "brier_score": 0.0825,
+      "mean_predicted_prob": 0.09149,
+      "actual_validation_failure_rate": 0.09138
+    }
+  },
+  "thresholds": {
+    "low_cutoff": 0.080,
+    "high_cutoff": 0.120,
+    "description": "LOW: probability < 0.080; MEDIUM: 0.080 <= probability < 0.120; HIGH: probability >= 0.120"
+  },
+  "bands": {
+    "LOW": {
+      "probability_range": "[0.000, 0.080)",
+      "validation_deliveries": 86251,
+      "validation_fraction": 0.3500,
+      "observed_failure_rate": 0.0722,
+      "relative_risk_vs_base": 0.790,
+      "operational_intent": "Standard automated dispatch to van; unattended delivery authorized without dispatcher intervention."
+    },
+    "MEDIUM": {
+      "probability_range": "[0.080, 0.120)",
+      "validation_deliveries": 135032,
+      "validation_fraction": 0.5479,
+      "observed_failure_rate": 0.0947,
+      "relative_risk_vs_base": 1.036,
+      "operational_intent": "Proactive customer digital engagement; trigger SMS delivery window confirmation, availability check, and access code collection."
+    },
+    "HIGH": {
+      "probability_range": "[0.120, 1.000]",
+      "validation_deliveries": 25149,
+      "validation_fraction": 0.1021,
+      "observed_failure_rate": 0.1397,
+      "relative_risk_vs_base": 1.528,
+      "operational_intent": "Pre-dispatch mitigation; reroute to Amazon Locker / Access Point, hold for evening dispatch shift, or prompt customer for mandatory alternative."
+    }
+  },
+  "interventions": {
+    "LOW": {
+      "default_action": "STANDARD_DISPATCH",
+      "default_details": "Normal dispatch to van; unattended delivery authorized to designated drop point.",
+      "signature_exception": "STANDARD_DISPATCH_SIGNATURE_PROMPT"
+    },
+    "MEDIUM": {
+      "default_action": "CUSTOMER_NOTIFICATION",
+      "default_details": "Trigger automated customer SMS delivery notice to confirm recipient availability.",
+      "mismatch_action": "APPOINTMENT_TIMING_CONFIRMATION",
+      "access_action": "REQUEST_GATE_CODE_INSTRUCTIONS",
+      "presence_action": "CONFIRM_PRESENCE_AND_BACKUP_LOCATION"
+    },
+    "HIGH": {
+      "default_action": "ACCESS_POINT_REDIRECT",
+      "default_details": "Recommend pre-dispatch rerouting to nearby Amazon Locker / Access Point for secure autonomous pickup.",
+      "reschedule_action": "RESCHEDULE_DELIVERY_WINDOW",
+      "hold_action": "HOLD_FOR_EVENING_SHIFT",
+      "guard_action": "REROUTE_TO_BUILDING_MANAGEMENT_OR_LOCKER"
+    }
+  },
+  "calibration": {
+    "status": "CALIBRATED_NATURALLY",
+    "brier_score": 0.0825,
+    "brier_score_oracle": 0.0825,
+    "max_decile_calibration_error": 0.0029,
+    "post_processing_applied": "NONE",
+    "justification": "Additional parametric scaling or isotonic regression was omitted because unweighted Logistic Regression probabilities are already naturally aligned with empirical failure frequencies across all validation deciles."
+  },
+  "explanation_rules": {
+    "LOW_CUSTOMER_AVAILABILITY": "customer_availability_rate < 0.70",
+    "HIGH_ADDRESS_ACCESS_DIFFICULTY": "address_access_difficulty >= 4",
+    "SIGNATURE_REQUIRED": "signature_required == 1",
+    "PREFERENCE_DEPARTURE_MISMATCH": "preference_departure_mismatch == 1 or customer_delivery_preference mismatch with departure_hour/weekend",
+    "HIGH_HISTORICAL_ZONE_FAILURE": "historical_zone_failure_rate >= 0.060",
+    "HIGH_PREVIOUS_FAILED_ATTEMPTS": "customer_previous_failed_attempts >= 2",
+    "LOW_PREVIOUS_SUCCESS_RATE": "customer_previous_success_rate < 0.85 and customer_previous_delivery_attempts > 0",
+    "ELEVATED_TRAFFIC_RISK": "traffic_risk_score >= 0.60",
+    "ELEVATED_WEATHER_RISK": "weather_risk_score >= 0.50",
+    "LARGE_PACKAGE_VOLUME": "package_volume_cm3 >= 25000",
+    "HAND_TO_CUSTOMER_METHOD": "preferred_delivery_method == 'Hand to Customer'"
+  },
+  "audit_and_compliance": {
+    "validation_only_selection": true,
+    "test_set_touched": false,
+    "synthetic_target_disclaimer": "The target 'first_attempt_failed' and CRM features were synthetically generated for hackathon prototype evaluation. Operational thresholds are derived from validation set experiments and do not reflect real-world Amazon logistics performance."
+  }
+}
