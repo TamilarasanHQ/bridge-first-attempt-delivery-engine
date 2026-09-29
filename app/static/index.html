@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BRIDGE — AI-Powered First Attempt Delivery Success Engine</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="logo-group">
+        <div class="logo-badge">BRIDGE v2</div>
+        <div class="title-group">
+          <h1>First-Attempt Delivery Success Engine</h1>
+          <p>Pre-Dispatch Machine Learning Decision Support & Autonomous Risk Mitigation</p>
+        </div>
+      </div>
+      <div class="status-pill">
+        <span class="status-indicator"></span>
+        <span id="system-status-text">HistGradientBoosting: ONLINE (23 Features)</span>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchView('dashboard')">📊 Dispatch Manager Dashboard</button>
+      <button class="tab-btn" onclick="switchView('portal')">📱 Customer Preference Portal (Preview)</button>
+      <button class="tab-btn" onclick="switchView('simulator')">⚡ Real-Time What-If Simulator</button>
+    </div>
+
+    <!-- VIEW 1: Dispatch Manager Dashboard -->
+    <div id="view-dashboard">
+      <!-- KPI Metric Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Manifest Deliveries</div>
+          <div class="kpi-value" id="kpi-total">0</div>
+          <div class="kpi-subtext">Pre-dispatch parcel manifests scored</div>
+        </div>
+        <div class="kpi-card kpi-danger">
+          <div class="kpi-label">High Risk Flagged (Pre-Dispatch)</div>
+          <div class="kpi-value" id="kpi-high-risk">0</div>
+          <div class="kpi-subtext" id="kpi-high-risk-pct">0.0% of network dispatch</div>
+        </div>
+        <div class="kpi-card kpi-success">
+          <div class="kpi-label">Estimated Failures Prevented</div>
+          <div class="kpi-value" id="kpi-prevented">0</div>
+          <div class="kpi-subtext">Via automated pre-dispatch preferences</div>
+        </div>
+        <div class="kpi-card kpi-savings">
+          <div class="kpi-label">Projected Net Cost Savings</div>
+          <div class="kpi-value" id="kpi-savings">$0.00</div>
+          <div class="kpi-subtext">Estimated at $15.50 per averted re-attempt</div>
+        </div>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="action-bar">
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="loadSampleManifest()">
+            📥 Load Morning Amazon Manifest (DLA3 / DSE4 / DBO1)
+          </button>
+          <button class="btn btn-secondary" onclick="evaluateManifest()">
+            ⚡ Re-Score Route
+          </button>
+        </div>
+
+        <div class="filter-group">
+          <span style="font-size: 13px; color: var(--text-secondary);">Filter:</span>
+          <button class="filter-btn active" onclick="filterTable('ALL', this)">All</button>
+          <button class="filter-btn" onclick="filterTable('HIGH', this)">High Risk Only</button>
+          <button class="filter-btn" onclick="filterTable('RESOLVED', this)">Resolved</button>
+        </div>
+      </div>
+
+      <!-- Manifest Risk Table -->
+      <div class="card-table">
+        <div class="table-header-title">
+          <h2>Pre-Dispatch Vehicle Manifest: Risk & Decision Queue</h2>
+          <span id="table-subtitle" style="font-size: 13px; color: var(--text-secondary);">Click "Load Morning Amazon Manifest" to begin analysis.</span>
+        </div>
+        <table id="manifest-table">
+          <thead>
+            <tr>
+              <th>Package & Recipient</th>
+              <th>Station / Route</th>
+              <th>Dwell & Window</th>
+              <th>Failure Risk P(fail)</th>
+              <th>Risk Tier</th>
+              <th>AI Associative Risk Drivers</th>
+              <th>Operational Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="manifest-tbody">
+            <tr>
+              <td colspan="8" style="text-align: center; color: var(--text-secondary); padding: 40px;">
+                No manifest loaded. Click <strong>"Load Morning Amazon Manifest"</strong> above to score pre-dispatch deliveries.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VIEW 2: Customer Preference Portal Preview -->
+    <div id="view-portal" style="display: none;">
+      <div class="portal-card">
+        <div class="portal-header">
+          <div class="logo-badge" style="display: inline-block; margin-bottom: 12px;">BRIDGE CONCIERGE</div>
+          <h2>Delivery Preference Selection</h2>
+          <p style="color: var(--text-secondary); font-size: 14px;">
+            Simulating the customer-facing mobile SMS link for high-risk delivery prevention.
+          </p>
+        </div>
+
+        <div class="portal-pkg-banner">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <span id="portal-pkg-id" style="font-weight: 800; font-size: 16px; color: #fff;">PKG-DLA3-9941</span>
+              <p id="portal-pkg-recipient" style="color: var(--text-secondary); font-size: 13px;">Jordan Hayes • 888 S Hope St, High-Rise Unit 1804</p>
+            </div>
+            <span class="risk-tag HIGH">ATTENTION NEEDED</span>
+          </div>
+          <p style="font-size: 13px; color: #fca5a5; margin-top: 8px;">
+            ⚠️ Our logistics system predicts potential delivery difficulty (access restrictions or schedule mismatch). Please select how you would prefer to receive your parcel today:
+          </p>
+        </div>
+
+        <div class="option-cards" id="preference-options-list">
+          <!-- Dynamically populated or standard 5 options -->
+          <div class="option-item selected" onclick="selectOption('ACCESS_POINT', this)">
+            <input type="radio" name="delivery_opt" class="option-radio" checked>
+            <div class="option-content">
+              <h4>🏪 Deliver to Nearby Access Point / Locker</h4>
+              <p>Safe, 24/7 automated pickup locker at Ralphs Downtown Hub (0.8 mi away). Guaranteed delivery.</p>
+            </div>
+          </div>
+
+          <div class="option-item" onclick="selectOption('HOLD_PICKUP', this)">
+            <input type="radio" name="delivery_opt" class="option-radio">
+            <div class="option-content">
+              <h4>📦 Hold for Pickup at Fulfillment Depot</h4>
+              <p>Hold parcel at Station DLA3 Will-Call customer desk for secure same-day collection.</p>
+            </div>
+          </div>
+
+          <div class="option-item" onclick="selectOption('RESCHEDULE', this)">
+            <input type="radio" name="delivery_opt" class="option-radio">
+            <div class="option-content">
+              <h4>📅 Deliver on Another Date</h4>
+              <p>Choose tomorrow or an upcoming date when you are guaranteed to be home.</p>
+              <div class="option-extra-input" id="reschedule-input" style="display: none;">
+                <input type="date" id="reschedule-date" style="padding: 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: #fff; width: 100%;">
+              </div>
+            </div>
+          </div>
+
+          <div class="option-item" onclick="selectOption('NEIGHBOR', this)">
+            <input type="radio" name="delivery_opt" class="option-radio">
+            <div class="option-content">
+              <h4>🏡 Deliver to Designated Neighbor / Front Desk</h4>
+              <p>Authorize building concierge or adjacent apartment neighbor to accept parcel.</p>
+              <div class="option-extra-input" id="neighbor-input" style="display: none;">
+                <input type="text" id="neighbor-notes" placeholder="Unit # or Neighbor Name..." style="padding: 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: #fff; width: 100%;">
+              </div>
+            </div>
+          </div>
+
+          <div class="option-item" onclick="selectOption('CONFIRM_AVAILABLE', this)">
+            <input type="radio" name="delivery_opt" class="option-radio">
+            <div class="option-content">
+              <h4> Confirm Availability & Provide Gate Code</h4>
+              <p>Confirm you are present today and supply front gate buzzer or building access code.</p>
+              <div class="option-extra-input" id="gate-input" style="display: none;">
+                <input type="text" id="gate-code" placeholder="Enter Gate / Buzzer Code (#4192)..." style="padding: 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: #fff; width: 100%;">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 14px; font-size: 16px;" onclick="submitPreference()">
+          Confirm Delivery Preference
+        </button>
+
+        <div id="portal-confirmation-box" style="display: none; margin-top: 20px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; border-radius: 12px; padding: 16px; text-align: center;">
+          <h4 style="color: #6ee7b7; margin-bottom: 4px;">✅ Preference Confirmed</h4>
+          <p id="portal-confirmation-msg" style="font-size: 13px; color: #fff;"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: Real-Time What-If Simulator -->
+    <div id="view-simulator" style="display: none;">
+      <div class="simulator-section">
+        <div class="simulator-card">
+          <h2 style="font-size: 18px; margin-bottom: 8px;">Interactive Parcel Risk Simulator</h2>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+            Adjust manifest characteristics to simulate how planned dwell, time windows, and route density affect the model's calibrated failure probability.
+          </p>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Fulfillment Depot</label>
+              <select id="sim-station" onchange="runSimulation()">
+                <option value="DLA3">DLA3 (Los Angeles - High Density)</option>
+                <option value="DLA8">DLA8 (Los Angeles - South)</option>
+                <option value="DBO1">DBO1 (Boston - Core)</option>
+                <option value="DSE4">DSE4 (Seattle - Urban)</option>
+                <option value="DCH2">DCH2 (Chicago - Loop)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Day of Week</label>
+              <select id="sim-dow" onchange="runSimulation()">
+                <option value="Friday">Friday</option>
+                <option value="Monday">Monday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Saturday">Saturday (Weekend)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Service Dwell Time: <span id="val-dwell" style="color: #60a5fa;">180s</span></label>
+              <input type="range" id="sim-dwell" min="30" max="360" step="15" value="180" oninput="updateRangeLabel('val-dwell', this.value + 's'); runSimulation();">
+            </div>
+
+            <div class="form-group">
+              <label>Delivery Window Restriction</label>
+              <select id="sim-window" onchange="runSimulation()">
+                <option value="1">Restricted Window (1.5 - 2 hr slot)</option>
+                <option value="0">Standard (All-Day Window)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Van Volume Capacity Load: <span id="val-util" style="color: #60a5fa;">75%</span></label>
+              <input type="range" id="sim-util" min="20" max="95" step="5" value="75" oninput="updateRangeLabel('val-util', this.value + '%'); runSimulation();">
+            </div>
+
+            <div class="form-group">
+              <label>Package Volume: <span id="val-vol" style="color: #60a5fa;">35L</span></label>
+              <input type="range" id="sim-vol" min="5" max="80" step="5" value="35" oninput="updateRangeLabel('val-vol', this.value + 'L'); runSimulation();">
+            </div>
+          </div>
+        </div>
+
+        <div class="simulator-card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+          <h3 style="font-size: 14px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 8px;">Calibrated Predicted Failure Risk</h3>
+          <div id="sim-risk-prob" style="font-size: 56px; font-weight: 800; color: #f59e0b; margin-bottom: 8px;">3.85%</div>
+          <div id="sim-risk-badge" class="risk-tag HIGH" style="font-size: 14px; padding: 6px 16px; margin-bottom: 16px;">HIGH RISK (ACTION REQUIRED)</div>
+          
+          <div style="background: rgba(255,255,255,0.05); border-radius: 8px; padding: 16px; width: 100%; text-align: left;">
+            <div style="font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px;">TOP ASSOCIATIVE RISK FACTORS:</div>
+            <ul id="sim-factors" style="font-size: 13px; color: var(--text-primary); padding-left: 20px; line-height: 1.6;">
+              <li>Elevated service dwell time indicates apartment gate or security hurdle.</li>
+              <li>Restricted time window creates strict delivery pressure.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

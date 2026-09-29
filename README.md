@@ -59,6 +59,12 @@ This repository is structured as a **versioned monorepo** containing both iterat
 
 ```text
 FDSE/
+├── app/                              # Production FastAPI Service & Web Dashboard
+│   ├── api/                          # REST API v1 endpoints (predict, preferences, health)
+│   ├── core/                         # Inference engine wrapper & deterministic policy
+│   ├── schemas/                      # Pydantic validation schemas
+│   ├── static/                       # Web Dashboard & Customer Preference Portal UI
+│   └── main.py                       # FastAPI application entrypoint
 ├── v1/                               # Version 1: Synthetic Ground-Truth Baseline (Frozen)
 │   ├── src/                          # v1 data cleaning, synthetic generation, training
 │   ├── models/                       # v1 serialized models, preprocessors, risk policy
@@ -129,6 +135,15 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 ```
+
+### Launching the Operational Service & Web Dashboard
+```bash
+# Start the FastAPI decision server
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+- **Dispatch Manager Command Center:** Visit [http://localhost:8000](http://localhost:8000)
+- **Customer Preference Portal:** Visit [http://localhost:8000/portal](http://localhost:8000/portal)
+- **Interactive Swagger OpenAPI Docs:** Visit [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ### Running the Test Suite
 ```bash
